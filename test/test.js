@@ -1,62 +1,30 @@
-import GameSavingLoader from '../src/js/main';
-import readGameSaving from '../src/js/readGameSaving';
+import Team from '../src/js/function';
 
+const team = new Team();
+const gen = team[Symbol.iterator]();
 
-jest.mock('../src/js/readGameSaving.js');
-
-beforeEach(() => {
-  jest.resetAllMocks();
-});
-
-test('Промис возвращается', async () => {
+test('First', () => {
   const expected = {
-    id: 9,
-    created: 1546300800,
-    userInfo: {
-      id: 1, name: 'Hitman', level: 10, points: 2000,
-    },
+    name: 'Magician', health: 100, level: 1, type: 'Magician', defence: 60, attack: 10, damage: 10,
   };
-  const promise = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const data = '{"id":9,"created":1546300800,"userInfo":{"id":1,"name":"Hitman","level":10,"points":2000}}';
-      return ((input) => {
-        const buffer = new ArrayBuffer(input.length * 2);
-        const bufferView = new Uint16Array(buffer);
-        for (let i = 0; i < input.length; i++) {
-          bufferView[i] = input.charCodeAt(i);
-        }
-        resolve(buffer);
-      })(data);
-    }, 500);
-  });
-  readGameSaving.mockReturnValue(promise);
-  const gameSavingLoader = new GameSavingLoader();
-  const load = gameSavingLoader.load();
-  return load.then((result) => {
-    expect(result).toEqual(expected);
-  });
+  const hero = gen.next();
+  const received = hero.value;
+  expect(received).toEqual(expected);
+});
+test('Second', () => {
+  const expected = {
+    name: 'Bowman', health: 100, level: 1, type: 'Bowman', defence: 50, attack: 8, damage: 8,
+  };
+  const hero = gen.next();
+  const received = hero.value;
+  expect(received).toEqual(expected);
 });
 
-
-test('Ошибка', async () => {
-  const expected = 'Что-то пошло не так';
-  const promise = new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const data = '{"id":9,"created":1546300800,"userInfo":{"id":1,"name":"Hitman","level":10,"points":2000}}';
-      return ((input) => {
-        const buffer = new ArrayBuffer(input.length * 2);
-        const bufferView = new Uint16Array(buffer);
-        for (let i = 0; i < input.length; i++) {
-          bufferView[i] = input.charCodeAt(i);
-        }
-        resolve(buffer);
-      })(data);
-    }, 500);
-  });
-  readGameSaving.mockReturnValue(promise);
-  const gameSavingLoader = new GameSavingLoader();
-  const load = gameSavingLoader.load();
-  return load.then((result) => {
-    expect(result).toEqual(expected);
-  });
+test('Third', () => {
+  const expected = {
+    name: 'Swordsman', health: 100, level: 1, type: 'Swordsman', defence: 50, attack: 5, damage: 5,
+  };
+  const hero = gen.next();
+  const received = hero.value;
+  expect(received).toEqual(expected);
 });
